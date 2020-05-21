@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <ListPreference
+        android:defaultValue="15"
+        android:entries="@array/reload_times"
+        android:entryValues="@array/reload_times_values"
+        android:key="interval_time"
+        android:title="Reload time" />
+    <EditTextPreference
+        android:defaultValue="15"
+        android:key="long"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Long" />
+    <EditTextPreference
+        android:defaultValue="20"
+        android:key="lat"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Latitiude" />
+</PreferenceScreen>
