@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setAlarm();
+
 
     }
 
@@ -40,14 +40,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void setAlarm(){
-        String interval_time = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("interval_time","15");
-        long intervalValue = Integer.parseInt(interval_time) * 60;
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent("MyAction");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,PendingIntent.FLAG_CANCEL_CURRENT);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + intervalValue,intervalValue, pendingIntent);
-    }
 
 
 }

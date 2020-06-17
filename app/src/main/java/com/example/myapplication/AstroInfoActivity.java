@@ -25,12 +25,15 @@ import com.google.android.material.tabs.TabLayout;
 import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.prefs.Preferences;
 import java.util.stream.Stream;
 
@@ -43,11 +46,12 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
     private TextView lat;
     private TextView timer;
     private Thread thread;
+    private TimerTask timerTask;
+    private Timer timerProc;
     private List<RefreshableFragment> fragments;
 
     SharedPreferences sharedPreferences;
     volatile boolean stopThread = false;
-    BroadcastReceiver astroReceiver;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -64,18 +68,21 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
         }
         loadPreferences();
         initThread();
-        astroReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                execudeFragmentsProcedures();
-            }
-        };
         IntentFilter intentFilter = new IntentFilter("MyAction");
-        registerReceiver(astroReceiver, intentFilter);
+        setUpIntervalTask();
+    }
+
+    private void setUpIntervalTask() {
+        String interval_time = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("interval_time", "15");
+        long intervalValue = Integer.parseInt(interval_time) * 60 * 1000;
+        timerProc = new Timer();
+        timerTask = new IntervalRefresher(fragments);
+        timerProc.scheduleAtFixedRate(timerTask, 100, intervalValue);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    void execudeFragmentsProcedures() {
+    public void execudeFragmentsProcedures() {
         fragments.forEach(fragment -> fragment.dataAttach(null));
     }
 
@@ -86,13 +93,15 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
         stopThread = false;
         if (thread != null)
             initThread();
+        if(timerTask == null)
+            setUpIntervalTask();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         stopThread = true;
-        unregisterReceiver(astroReceiver);
+        timerTask.cancel();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -112,9 +121,9 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
     }
 
     private void bindViewWithAttr() {
-        longText =  findViewById(R.id.longId);
-        lat =  findViewById(R.id.latId);
-        timer =  findViewById(R.id.timer);
+        longText = findViewById(R.id.longId);
+        lat = findViewById(R.id.latId);
+        timer = findViewById(R.id.timer);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -132,26 +141,26 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void setUpPagerViewForMobile(){
-        if(fragments == null)
+    private void setUpPagerViewForMobile() {
+        if (fragments == null)
             setUpFragmentsForMobile();
         fragments = pagerAdapter.getFragments();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void setUpPagerViewForTablet(){
-        if(fragments == null)
+    private void setUpPagerViewForTablet() {
+        if (fragments == null)
             setUpFragmentsForTablet();
         fragments = pagerAdapter.getFragments();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void setUpFragmentsForMobile(){
+    private void setUpFragmentsForMobile() {
         fragments = new LinkedList<>();
 
-        viewPager =  findViewById(R.id.pager);
-        tabLayout =  findViewById(R.id.tabLayout);
-        if(pagerAdapter == null)
+        viewPager = findViewById(R.id.pager);
+        tabLayout = findViewById(R.id.tabLayout);
+        if (pagerAdapter == null)
             pagerAdapter = new MobilePagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -159,11 +168,11 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void setUpFragmentsForTablet(){
+    private void setUpFragmentsForTablet() {
 
-        viewPager =  findViewById(R.id.pager);
-        tabLayout =  findViewById(R.id.tabLayout);
-        if(pagerAdapter == null)
+        viewPager = findViewById(R.id.pager);
+        tabLayout = findViewById(R.id.tabLayout);
+        if (pagerAdapter == null)
             pagerAdapter = new TabletPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);

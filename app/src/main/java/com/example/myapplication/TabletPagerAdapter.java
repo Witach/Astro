@@ -24,9 +24,10 @@ public class TabletPagerAdapter extends MyFragmentPagerAdapter {
 
     private void init(){
         fragments = new LinkedList<>();
-        names = Arrays.asList("Sun and Moon","Full Weather", "Forecast");
+        names = Arrays.asList("Sun and Moon","Adv Info", "Basic Info" , "Forecast");
         fragments.add(new SunAdnMoonInfo());
-        fragments.add(new FullWeatherInfo());
+        fragments.add(new AdvancedWeatherInfo());
+        fragments.add(new BasicWeatherInfo());
         fragments.add(new WeatherForecast());
     }
 

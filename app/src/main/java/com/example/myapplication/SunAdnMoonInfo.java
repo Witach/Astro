@@ -38,7 +38,9 @@ public class SunAdnMoonInfo extends RefreshableFragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void dataAttach(Object object) {
-        sunFragment.dataAttach(object);
-        moonFragment.dataAttach(object);
+        if(sunFragment!= null && moonFragment != null) {
+            sunFragment.dataAttach(object);
+            moonFragment.dataAttach(object);
+        }
     }
 }
