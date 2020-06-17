@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class BasicWeatherInfo extends RefreshableFragment {
-    // TODO: Rename and change types of parameters
     public BasicWeatherInfo() {
     }
 
