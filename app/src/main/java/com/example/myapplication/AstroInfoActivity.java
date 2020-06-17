@@ -53,13 +53,15 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_astro_info);
         bindViewWithAttr();
-        if(!getResources().getBoolean(R.bool.isTablet)){
+        if (!getResources().getBoolean(R.bool.isTablet)) {
             setUpPagerView();
-        } else{
+        } else {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            sunFragment = new SunFragment();
-            moonFragment = new MoonFragment();
+            if(sunFragment == null)
+                sunFragment = new SunFragment();
+            if(moonFragment == null)
+                moonFragment = new MoonFragment();
             fragmentTransaction.replace(R.id.sunFrame, sunFragment, "moon_fragment");
             fragmentTransaction.replace(R.id.moonFrame, moonFragment, "sun_fragment");
             fragmentTransaction.commit();
@@ -73,11 +75,11 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
             }
         };
         IntentFilter intentFilter = new IntentFilter("MyAction");
-        registerReceiver(astroReceiver,intentFilter);
+        registerReceiver(astroReceiver, intentFilter);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    void execudeFragmentsProcedures(){
+    void execudeFragmentsProcedures() {
         sunFragment.showSth();
         moonFragment.showSth();
     }
@@ -87,7 +89,7 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
     protected void onResume() {
         super.onResume();
         stopThread = false;
-        if(thread != null)
+        if (thread != null)
             initThread();
     }
 
@@ -99,7 +101,7 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void initThread(){
+    private void initThread() {
         thread = new Thread(() -> {
             try {
                 while (!stopThread) {
@@ -165,8 +167,10 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
 
     private void setupViewPageAdapter(ViewPager viewPager) {
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
-        sunFragment = new SunFragment();
-        moonFragment = new MoonFragment();
+        if (sunFragment == null)
+            sunFragment = new SunFragment();
+        if (moonFragment == null)
+            moonFragment = new MoonFragment();
         pagerAdapter.addFragment(sunFragment);
         pagerAdapter.addFragment(moonFragment);
         viewPager.setAdapter(pagerAdapter);
