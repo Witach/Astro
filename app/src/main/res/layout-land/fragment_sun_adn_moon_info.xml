@@ -2,21 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".SunAdnMoonInfo" >
+    android:layout_height="match_parent">
 
     <fragment
         android:id="@+id/sun_fragment"
         android:name="com.example.myapplication.SunFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1" />
 
     <fragment
         android:id="@+id/moon_fragment"
         android:name="com.example.myapplication.MoonFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1" />
 </LinearLayout>

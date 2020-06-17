@@ -47,29 +47,22 @@
             android:text="11:20"
             android:textColor="@android:color/background_light"
             android:textSize="18sp" />
+
     </LinearLayout>
 
-    <LinearLayout
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.8"
-        android:orientation="horizontal">
+        android:layout_weight="0.03"
+        android:background="@android:color/black"
+        app:tabTextColor="@android:color/background_light"></com.google.android.material.tabs.TabLayout>
 
-        <FrameLayout
-            android:id="@+id/sunFrame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/moonFrame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-        </FrameLayout>
-    </LinearLayout>
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:background="@color/cardview_shadow_end_color" />
 
 </LinearLayout>

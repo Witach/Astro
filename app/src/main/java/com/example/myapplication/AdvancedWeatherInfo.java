@@ -9,10 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class AdvancedWeatherInfo extends Fragment {
+public class AdvancedWeatherInfo extends RefreshableFragment {
 
 
     public AdvancedWeatherInfo() {
+    }
+
+    @Override
+    public void dataAttach(Object object) {
+
     }
 
     public static AdvancedWeatherInfo newInstance(String param1, String param2) {

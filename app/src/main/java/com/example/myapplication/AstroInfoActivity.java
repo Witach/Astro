@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
@@ -23,23 +24,26 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.prefs.Preferences;
 import java.util.stream.Stream;
 
 public class AstroInfoActivity extends AppCompatActivity implements SunFragment.OnFragmentInteractionListener, MoonFragment.OnFragmentInteractionListener {
 
-    private PagerAdapter pagerAdapter;
+    private MyFragmentPagerAdapter pagerAdapter;
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private SunFragment sunFragment;
-    private MoonFragment moonFragment;
     private TextView longText;
     private TextView lat;
     private TextView timer;
     private Thread thread;
+    private List<RefreshableFragment> fragments;
 
     SharedPreferences sharedPreferences;
     volatile boolean stopThread = false;
@@ -54,17 +58,9 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
         setContentView(R.layout.activity_astro_info);
         bindViewWithAttr();
         if (!getResources().getBoolean(R.bool.isTablet)) {
-            setUpPagerView();
+            setUpPagerViewForMobile();
         } else {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            if(sunFragment == null)
-                sunFragment = new SunFragment();
-            if(moonFragment == null)
-                moonFragment = new MoonFragment();
-            fragmentTransaction.replace(R.id.sunFrame, sunFragment, "moon_fragment");
-            fragmentTransaction.replace(R.id.moonFrame, moonFragment, "sun_fragment");
-            fragmentTransaction.commit();
+            setUpPagerViewForTablet();
         }
         loadPreferences();
         initThread();
@@ -80,8 +76,7 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     void execudeFragmentsProcedures() {
-        sunFragment.showSth();
-        moonFragment.showSth();
+        fragments.forEach(fragment -> fragment.dataAttach(null));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -117,9 +112,9 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
     }
 
     private void bindViewWithAttr() {
-        longText = (TextView) findViewById(R.id.longId);
-        lat = (TextView) findViewById(R.id.latId);
-        timer = (TextView) findViewById(R.id.timer);
+        longText =  findViewById(R.id.longId);
+        lat =  findViewById(R.id.latId);
+        timer =  findViewById(R.id.timer);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -135,16 +130,46 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
         timer.setText(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void setUpPagerView() {
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        pagerAdapter = new PagerAdapter(getSupportFragmentManager());
-        Stream.of("Sun", "Moon").forEach(val -> tabLayout.addTab(tabLayout.newTab().setText(val)));
+    private void setUpPagerViewForMobile(){
+        if(fragments == null)
+            setUpFragmentsForMobile();
+        fragments = pagerAdapter.getFragments();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void setUpPagerViewForTablet(){
+        if(fragments == null)
+            setUpFragmentsForTablet();
+        fragments = pagerAdapter.getFragments();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void setUpFragmentsForMobile(){
+        fragments = new LinkedList<>();
+
+        viewPager =  findViewById(R.id.pager);
+        tabLayout =  findViewById(R.id.tabLayout);
+        if(pagerAdapter == null)
+            pagerAdapter = new MobilePagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(pagerAdapter);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         setupViewPageAdapter(viewPager);
-        tabLayout.setOnTabSelectedListener(getOnTabSelectredListenerInstance());
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void setUpFragmentsForTablet(){
+
+        viewPager =  findViewById(R.id.pager);
+        tabLayout =  findViewById(R.id.tabLayout);
+        if(pagerAdapter == null)
+            pagerAdapter = new TabletPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(pagerAdapter);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        setupViewPageAdapter(viewPager);
+    }
+
 
     private TabLayout.OnTabSelectedListener getOnTabSelectredListenerInstance() {
         return new TabLayout.OnTabSelectedListener() {
@@ -165,15 +190,10 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
         };
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void setupViewPageAdapter(ViewPager viewPager) {
-        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
-        if (sunFragment == null)
-            sunFragment = new SunFragment();
-        if (moonFragment == null)
-            moonFragment = new MoonFragment();
-        pagerAdapter.addFragment(sunFragment);
-        pagerAdapter.addFragment(moonFragment);
         viewPager.setAdapter(pagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override

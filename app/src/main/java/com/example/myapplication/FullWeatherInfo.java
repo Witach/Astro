@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class FullWeatherInfo extends Fragment {
+public class FullWeatherInfo extends RefreshableFragment {
     public FullWeatherInfo() {
     }
 
@@ -27,5 +27,10 @@ public class FullWeatherInfo extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_full_weather_info, container, false);
+    }
+
+    @Override
+    public void dataAttach(Object object) {
+
     }
 }

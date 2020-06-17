@@ -8,9 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class BasicWeatherInfo extends Fragment {
+public class BasicWeatherInfo extends RefreshableFragment {
     // TODO: Rename and change types of parameters
     public BasicWeatherInfo() {
+    }
+
+    @Override
+    public void dataAttach(Object object) {
+
     }
 
     public static BasicWeatherInfo newInstance(String param1, String param2) {

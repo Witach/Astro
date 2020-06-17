@@ -27,7 +27,7 @@ import static com.example.myapplication.AstroFactory.cutUselessInfo;
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
-public class SunFragment extends Fragment {
+public class SunFragment extends RefreshableFragment {
         TextView sunrise;
         TextView sunset;
         TextView twilight_evening;
@@ -40,6 +40,11 @@ public class SunFragment extends Fragment {
         int i = 1;
     public SunFragment() {
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void dataAttach(Object object) {
+        showSth();
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void showSth(){
@@ -50,8 +55,8 @@ public class SunFragment extends Fragment {
         String sunset = sunInfo.getSunset().toString();
         String twilight_evening = sunInfo.getTwilightEvening().toString();
         String twilight_morning = sunInfo.getTwilightMorning().toString();
-        this.sunrise.setText(cutUselessInfo(sunrise) + "\n Azimuth: " + Double.toString(sunInfo.getAzimuthRise()));
-        this.sunset.setText(cutUselessInfo(sunset) + "\n Azimuth: " + Double.toString(sunInfo.getAzimuthSet()));
+        this.sunrise.setText(cutUselessInfo(sunrise) + "\n Azimuth: " + sunInfo.getAzimuthRise());
+        this.sunset.setText(cutUselessInfo(sunset) + "\n Azimuth: " + sunInfo.getAzimuthSet());
         this.twilight_evening.setText(cutUselessInfo(twilight_evening));
         this.twilight_morning.setText(cutUselessInfo(twilight_morning));
     }
@@ -111,4 +116,6 @@ public class SunFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
+
+
 }

@@ -9,8 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class WeatherForecast extends Fragment {
+public class WeatherForecast extends RefreshableFragment {
     public WeatherForecast() {
+    }
+
+    @Override
+    public void dataAttach(Object object) {
+
     }
 
     public static WeatherForecast newInstance(String param1, String param2) {

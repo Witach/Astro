@@ -26,7 +26,7 @@ import static com.example.myapplication.AstroFactory.cutUselessInfo;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MoonFragment extends Fragment {
+public class MoonFragment extends RefreshableFragment {
     TextView moonrise;
     TextView moonset;
     TextView new_moon;
@@ -42,6 +42,12 @@ public class MoonFragment extends Fragment {
     private AstroCalculator astroCalculator;
 
     public MoonFragment() {
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void dataAttach(Object object) {
+        showSth();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
