@@ -4,20 +4,46 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.TimerTask;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class IntervalRefresher extends TimerTask {
     List<RefreshableFragment> refreshableFragmentList;
+    OkHttpClient client;
 
     public IntervalRefresher(List<RefreshableFragment> refreshableFragmentList) {
         this.refreshableFragmentList = refreshableFragmentList;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void run() {
         refreshableFragmentList.forEach(fragment -> fragment.dataAttach(null));
-        YahooService.getInstance().doSth();
+        YahooService yahooService = new YahooService("dj0yJmk9QjduZk1TRVFMN250JmQ9WVdrOVJFNWlTazFFTkhFbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTdh",
+                "48746667d1352b63b406a30f16edead0c0d47097",
+                "https://weather-ydn-yql.media.yahoo.com/forecastrss",
+                "DNbJMD4q");
+        Request request = yahooService.getRequest("Sieradz");
+        client = new OkHttpClient();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call request, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String json = response.body().string();
+                System.out.println(json);
+            };
+        });
     }
 }

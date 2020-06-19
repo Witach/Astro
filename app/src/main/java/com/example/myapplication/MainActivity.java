@@ -23,19 +23,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
     }
 
     public void goToAstroInfoActivity(View view){
         Intent intent = new Intent(this, AstroInfoActivity.class);
-        intent.putExtra("context","eloszka");
         startActivity(intent);
     }
 
     public void goToSettingsActivity(View view){
         Intent intent = new Intent(this, SettingsActivity.class);
-        intent.putExtra("context","eloszka");
         startActivity(intent);
     }
 

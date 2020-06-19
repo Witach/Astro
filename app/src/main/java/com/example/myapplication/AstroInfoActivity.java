@@ -69,7 +69,6 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
         loadPreferences();
         initThread();
         IntentFilter intentFilter = new IntentFilter("MyAction");
-        setUpIntervalTask();
 
     }
 
