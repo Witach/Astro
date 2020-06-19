@@ -18,5 +18,6 @@ public class IntervalRefresher extends TimerTask {
     @Override
     public void run() {
         refreshableFragmentList.forEach(fragment -> fragment.dataAttach(null));
+        YahooService.getInstance().doSth();
     }
 }

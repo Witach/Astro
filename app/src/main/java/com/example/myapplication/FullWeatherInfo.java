@@ -14,8 +14,7 @@ public class FullWeatherInfo extends RefreshableFragment {
     }
 
     public static FullWeatherInfo newInstance(String param1, String param2) {
-        FullWeatherInfo fragment = new FullWeatherInfo();
-        return fragment;
+        return new FullWeatherInfo();
     }
 
     @Override

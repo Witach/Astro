@@ -67,7 +67,7 @@ public class SunFragment extends RefreshableFragment {
     }
 
     void initialGeoPosition() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         lat = Double.parseDouble(sharedPreferences.getString("lat", "15"));
         longVal = Double.parseDouble(sharedPreferences.getString("long", "20"));
     }
