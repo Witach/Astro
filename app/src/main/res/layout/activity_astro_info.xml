@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/cardview_shadow_end_color"
     android:orientation="vertical"
-    tools:context=".AstroInfoActivity">
+    tools:context=".activity.AstroInfoActivity">
 
     <LinearLayout
         android:id="@+id/time_container"

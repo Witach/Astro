@@ -4,18 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".SunAdnMoonInfo" >
+    tools:context=".fragments.SunAdnMoonInfo" >
 
     <fragment
         android:id="@+id/sun_fragment"
-        android:name="com.example.myapplication.SunFragment"
+        android:name="com.example.myapplication.fragments.SunFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
     <fragment
         android:id="@+id/moon_fragment"
-        android:name="com.example.myapplication.MoonFragment"
+        android:name="com.example.myapplication.fragments.MoonFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />

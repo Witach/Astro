@@ -1,6 +1,5 @@
-package com.example.myapplication;
+package com.example.myapplication.fragments;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -18,11 +17,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.astrocalculator.AstroCalculator;
-import com.astrocalculator.AstroDateTime;
+import com.example.myapplication.R;
+import com.example.myapplication.datarefresh.RefreshableFragment;
 import com.example.myapplication.jsonparse.YahooResponse;
 
-import static com.example.myapplication.AstroFactory.*;
-import static com.example.myapplication.AstroFactory.cutUselessInfo;
+import static com.example.myapplication.activity.AstroFactory.*;
+import static com.example.myapplication.activity.AstroFactory.cutUselessInfo;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,7 +43,7 @@ public class SunFragment extends RefreshableFragment {
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void dataAttach(YahooResponse object) {
+    public void dataAttach() {
         showSth();
     }
 

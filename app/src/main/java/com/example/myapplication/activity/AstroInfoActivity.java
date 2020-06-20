@@ -1,41 +1,32 @@
-package com.example.myapplication;
+package com.example.myapplication.activity;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.View;
 import android.widget.TextView;
 
+import com.example.myapplication.activity.pager.MobilePagerAdapter;
+import com.example.myapplication.activity.pager.MyFragmentPagerAdapter;
+import com.example.myapplication.R;
+import com.example.myapplication.activity.pager.TabletPagerAdapter;
+import com.example.myapplication.datarefresh.IntervalRefresher;
+import com.example.myapplication.datarefresh.RefreshableFragment;
+import com.example.myapplication.fragments.MoonFragment;
+import com.example.myapplication.fragments.SunFragment;
 import com.google.android.material.tabs.TabLayout;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
-import java.sql.Time;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.prefs.Preferences;
-import java.util.stream.Stream;
 
 public class AstroInfoActivity extends AppCompatActivity implements SunFragment.OnFragmentInteractionListener, MoonFragment.OnFragmentInteractionListener {
 
@@ -71,18 +62,15 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void setUpIntervalTask() {
         String interval_time = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("interval_time", "15");
-        long intervalValue = Integer.parseInt(interval_time) * 60 * 1000;
+        long intervl = Integer.parseInt(interval_time);
+        long intervalValue = intervl * 60 * 1000;
         timerProc = new Timer();
-        timerTask = new IntervalRefresher(fragments, this);
+        timerTask = new IntervalRefresher(fragments, this, intervalValue);
         timerProc.scheduleAtFixedRate(timerTask, 1000, intervalValue);
 
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void execudeFragmentsProcedures() {
-        fragments.forEach(fragment -> fragment.dataAttach(null));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -136,7 +124,10 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void refreshTimer() {
-        timer.setText(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        this.runOnUiThread( () -> {
+            timer.setText(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        });
+
     }
 
 

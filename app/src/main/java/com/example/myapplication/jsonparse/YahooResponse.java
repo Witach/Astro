@@ -5,17 +5,16 @@ import java.util.List;
 public class YahooResponse {
     Location location;
     CurrentObservation current_observation;
-    List<ForecastDay> forecast;
-    Long pubDate;
+    List<ForecastDay> forecasts;
 
     public YahooResponse() {
     }
 
-    public YahooResponse(Location location, CurrentObservation current_observation, List<ForecastDay> forecast, Long pubDate) {
+    public YahooResponse(Location location, CurrentObservation current_observation, List<ForecastDay> forecasts) {
         this.location = location;
         this.current_observation = current_observation;
-        this.forecast = forecast;
-        this.pubDate = pubDate;
+        this.forecasts = forecasts;
+
     }
 
     public Location getLocation() {
@@ -34,29 +33,21 @@ public class YahooResponse {
         this.current_observation = current_observation;
     }
 
-    public List<ForecastDay> getForecast() {
-        return forecast;
+    public List<ForecastDay> getForecasts() {
+        return forecasts;
     }
 
-    public void setForecast(List<ForecastDay> forecast) {
-        this.forecast = forecast;
+    public void setForecasts(List<ForecastDay> forecasts) {
+        this.forecasts = forecasts;
     }
 
-    public Long getPubDate() {
-        return pubDate;
-    }
-
-    public void setPubDate(Long pubDate) {
-        this.pubDate = pubDate;
-    }
 
     @Override
     public String toString() {
         return "YahooResponse{" +
                 "location=" + location +
                 ", current_observation=" + current_observation +
-                ", forecast=" + forecast +
-                ", pubDate=" + pubDate +
+                ", forecast=" + forecasts +
                 '}';
     }
 }

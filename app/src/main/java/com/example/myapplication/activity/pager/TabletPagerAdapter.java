@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.activity.pager;
 
 import android.os.Build;
 
@@ -7,8 +7,12 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.example.myapplication.datarefresh.RefreshableFragment;
+import com.example.myapplication.fragments.AdvancedWeatherInfo;
+import com.example.myapplication.fragments.BasicWeatherInfo;
+import com.example.myapplication.fragments.SunAdnMoonInfo;
+import com.example.myapplication.fragments.WeatherForecast;
 import com.example.myapplication.jsonparse.YahooResponse;
 
 import java.util.Arrays;
@@ -46,13 +50,6 @@ public class TabletPagerAdapter extends MyFragmentPagerAdapter {
 
     public List<RefreshableFragment> getFragments(){
         return fragments;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void attachInfoToFragments(YahooResponse object){
-        fragments.forEach(fragment -> {
-            fragment.dataAttach(object);
-        });
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.activity.pager;
 
 import android.graphics.pdf.PdfDocument;
 

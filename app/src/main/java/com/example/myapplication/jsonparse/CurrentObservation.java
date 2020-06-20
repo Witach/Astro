@@ -7,16 +7,18 @@ public class CurrentObservation {
     Atmosphere atmosphere;
     Astronomy astronomy;
     Condition condition;
+    Long pubDate;
 
 
     public CurrentObservation() {
     }
 
-    public CurrentObservation(Wind wind, Atmosphere atmosphere, Astronomy astronomy, Condition condition) {
+    public CurrentObservation(Wind wind, Atmosphere atmosphere, Astronomy astronomy, Condition condition, Long pubDate) {
         this.wind = wind;
         this.atmosphere = atmosphere;
         this.astronomy = astronomy;
         this.condition = condition;
+        this.pubDate = pubDate;
     }
 
     public Wind getWind() {
@@ -51,6 +53,14 @@ public class CurrentObservation {
         this.condition = condition;
     }
 
+    public Long getPubDate() {
+        return pubDate;
+    }
+
+    public void setPubDate(Long pubDate) {
+        this.pubDate = pubDate;
+    }
+
     @Override
     public String toString() {
         return "CurrentObservation{" +
@@ -58,6 +68,7 @@ public class CurrentObservation {
                 ", atmosphere=" + atmosphere +
                 ", astronomy=" + astronomy +
                 ", condition=" + condition +
+                ", pubDate=" + pubDate +
                 '}';
     }
 }
