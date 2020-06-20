@@ -8,13 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.myapplication.jsonparse.YahooResponse;
+
 
 public class WeatherForecast extends RefreshableFragment {
     public WeatherForecast() {
     }
 
     @Override
-    public void dataAttach(Object object) {
+    public void dataAttach(YahooResponse object) {
 
     }
 

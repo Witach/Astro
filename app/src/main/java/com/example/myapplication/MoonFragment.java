@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.astrocalculator.AstroCalculator;
+import com.example.myapplication.jsonparse.YahooResponse;
 
 import static com.example.myapplication.AstroFactory.astroCalculatorInstance;
 import static com.example.myapplication.AstroFactory.cutUselessInfo;
@@ -46,7 +47,7 @@ public class MoonFragment extends RefreshableFragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void dataAttach(Object object) {
+    public void dataAttach(YahooResponse object) {
         showSth();
     }
 

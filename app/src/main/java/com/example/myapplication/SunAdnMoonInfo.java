@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.myapplication.jsonparse.YahooResponse;
+
 
 public class SunAdnMoonInfo extends RefreshableFragment {
     SunFragment sunFragment;
@@ -37,7 +39,7 @@ public class SunAdnMoonInfo extends RefreshableFragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void dataAttach(Object object) {
+    public void dataAttach(YahooResponse object) {
         if(sunFragment!= null && moonFragment != null) {
             sunFragment.dataAttach(object);
             moonFragment.dataAttach(object);

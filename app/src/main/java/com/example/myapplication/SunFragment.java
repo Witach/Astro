@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.astrocalculator.AstroCalculator;
 import com.astrocalculator.AstroDateTime;
+import com.example.myapplication.jsonparse.YahooResponse;
 
 import static com.example.myapplication.AstroFactory.*;
 import static com.example.myapplication.AstroFactory.cutUselessInfo;
@@ -42,7 +43,7 @@ public class SunFragment extends RefreshableFragment {
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void dataAttach(Object object) {
+    public void dataAttach(YahooResponse object) {
         showSth();
     }
 

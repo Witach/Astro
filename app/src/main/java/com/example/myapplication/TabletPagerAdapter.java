@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.example.myapplication.jsonparse.YahooResponse;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,7 +49,7 @@ public class TabletPagerAdapter extends MyFragmentPagerAdapter {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void attachInfoToFragments(Object object){
+    public void attachInfoToFragments(YahooResponse object){
         fragments.forEach(fragment -> {
             fragment.dataAttach(object);
         });

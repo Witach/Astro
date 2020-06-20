@@ -68,7 +68,6 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
         }
         loadPreferences();
         initThread();
-        IntentFilter intentFilter = new IntentFilter("MyAction");
 
     }
 
@@ -76,7 +75,7 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
         String interval_time = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("interval_time", "15");
         long intervalValue = Integer.parseInt(interval_time) * 60 * 1000;
         timerProc = new Timer();
-        timerTask = new IntervalRefresher(fragments);
+        timerTask = new IntervalRefresher(fragments, this);
         timerProc.scheduleAtFixedRate(timerTask, 1000, intervalValue);
 
     }
