@@ -56,7 +56,7 @@ public class YahooDataFormatter {
     }
 
     public String formatHumidity(double humidity) {
-        return String.format("%.2f %", humidity);
+        return String.format("%.2f %%", humidity);
     }
 
     public String formatVisibility(double visibility) {

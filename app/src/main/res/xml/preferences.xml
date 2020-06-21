@@ -8,6 +8,11 @@
         android:entryValues="@array/reload_times_values"
         android:key="interval_time"
         android:title="Reload time" />
+    <ListPreference
+        android:key="unit_type"
+        android:title="Unit Type"
+        android:entries="@array/UnitsData"
+        android:entryValues="@array/UnitDataValues"/>
     <EditTextPreference
         android:defaultValue="15"
         android:key="long"

@@ -14,6 +14,7 @@ import com.example.myapplication.jsonparse.YahooResponse;
 import com.example.myapplication.service.DIManager;
 import com.example.myapplication.service.Units;
 import com.example.myapplication.service.YahooClient;
+import com.example.myapplication.service.YahooDataFormatter;
 import com.example.myapplication.service.YahooRepository;
 import com.google.gson.Gson;
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     YahooClient yahooClient;
     YahooRepository yahooRepository;
+    YahooDataFormatter yahooDataFormatter;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +42,23 @@ public class MainActivity extends AppCompatActivity {
         String unitType = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("unit_type", Units.F.name());
         Units unit = Units.valueOf(unitType);
         yahooClient.setUnits(unit);
-        diManager.getYahooDataFormatter().setSelectedUnitsType(unit);
+        yahooDataFormatter = diManager.getYahooDataFormatter();
+        yahooDataFormatter.setSelectedUnitsType(unit);
         String interval = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("interval_time", "15");
         Integer intervalVal = Integer.parseInt(interval);
         if(ChronoUnit.MINUTES.between(yahooRepository.getLocalDateTime(), LocalDateTime.now()) > -1){
             yahooClient.sendForecastRequest("Sieradz",callback());
         }
 
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        String unitType = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("unit_type", Units.F.name());
+        Units unit = Units.valueOf(unitType);
+        yahooClient.setUnits(unit);
+        yahooDataFormatter.setSelectedUnitsType(unit);
     }
 
     public void goToAstroInfoActivity(View view){

@@ -42,10 +42,10 @@ public class AdvancedWeatherInfo extends RefreshableFragment {
     }
 
     public void refreshData(){
-        windForce.setText(data.getCurrent_observation().getWind().getSpeed().toString());
-        windDirection.setText(data.getCurrent_observation().getWind().getDirection().toString());
-        humidity.setText(data.getCurrent_observation().getAtmosphere().getHumidity().toString());
-        visibility.setText(data.getCurrent_observation().getAtmosphere().getVisibility().toString());
+        windForce.setText(yahooDataFormatter.formatWindForce(data.getCurrent_observation().getWind().getSpeed()));
+        windDirection.setText(yahooDataFormatter.formatWindDirection(data.getCurrent_observation().getWind().getDirection()));
+        humidity.setText(yahooDataFormatter.formatHumidity(data.getCurrent_observation().getAtmosphere().getHumidity()));
+        visibility.setText(yahooDataFormatter.formatVisibility(data.getCurrent_observation().getAtmosphere().getVisibility()));
     }
 
     public static AdvancedWeatherInfo newInstance(String param1, String param2) {
