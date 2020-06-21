@@ -53,6 +53,10 @@ public class WeatherForecast extends RefreshableFragment {
         fourthDay.setText(yahooDataFormatter.formatForecast(yahooResponse.getForecasts().get(4)));
         thirdDayDate.setText(yahooResponse.getForecasts().get(3).getDay());
         fourthDayDate.setText(yahooResponse.getForecasts().get(4).getDay());
+        tomorrowImg.setImageResource(yahooDataFormatter.getApropiateImgForDesc(yahooResponse.getForecasts().get(1).getText()));
+        secondDayImg.setImageResource(yahooDataFormatter.getApropiateImgForDesc(yahooResponse.getForecasts().get(2).getText()));
+        thirdDayImg.setImageResource(yahooDataFormatter.getApropiateImgForDesc(yahooResponse.getForecasts().get(3).getText()));
+        fourthDayImg.setImageResource(yahooDataFormatter.getApropiateImgForDesc(yahooResponse.getForecasts().get(4).getText()));
     }
 
     public static WeatherForecast newInstance(String param1, String param2) {

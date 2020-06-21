@@ -29,14 +29,12 @@ public class MainActivity extends AppCompatActivity {
 
     YahooClient yahooClient;
     YahooRepository yahooRepository;
-    Gson gson;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         DIManager diManager = DIManager.getInstance();
-        gson = new Gson();
         yahooClient = diManager.getYahooClient();
         yahooRepository = diManager.getYahooRepository();
         String unitType = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("unit_type", Units.F.name());
@@ -72,9 +70,7 @@ public class MainActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                YahooResponse yahooResponse = gson.fromJson(response.body().string(), YahooResponse.class);
-                yahooRepository.setYahooResponse(yahooResponse);
-                System.out.println(yahooResponse);
+                yahooRepository.setYahooResponse(response.body().string());
             }
         };
     }

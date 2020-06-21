@@ -9,24 +9,34 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.myapplication.activity.pager.MobilePagerAdapter;
 import com.example.myapplication.activity.pager.MyFragmentPagerAdapter;
 import com.example.myapplication.R;
 import com.example.myapplication.activity.pager.TabletPagerAdapter;
+import com.example.myapplication.datarefresh.DataAttach;
 import com.example.myapplication.datarefresh.IntervalRefresher;
 import com.example.myapplication.datarefresh.RefreshableFragment;
 import com.example.myapplication.fragments.MoonFragment;
 import com.example.myapplication.fragments.SunFragment;
+import com.example.myapplication.service.DIManager;
+import com.example.myapplication.service.YahooClient;
+import com.example.myapplication.service.YahooRepository;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class AstroInfoActivity extends AppCompatActivity implements SunFragment.OnFragmentInteractionListener, MoonFragment.OnFragmentInteractionListener {
 
@@ -40,6 +50,8 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
     private TimerTask timerTask;
     private Timer timerProc;
     private List<RefreshableFragment> fragments;
+    private YahooRepository yahooRepository;
+    private YahooClient yahooClient;
 
     SharedPreferences sharedPreferences;
     volatile boolean stopThread = false;
@@ -59,7 +71,34 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
         }
         loadPreferences();
         initThread();
+       DIManager diManager = DIManager.getInstance();
+        yahooClient = diManager.getYahooClient();
+        yahooRepository = diManager.getYahooRepository();
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void onRefreshClick(View view){
+        timerTask.cancel();
+        timerProc.cancel();
+        yahooClient.sendForecastRequest("Sieradz", callback());
+    }
+
+    public Callback callback(){
+        return new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                yahooRepository.setYahooResponse(response.body().string());
+                fragments.forEach(DataAttach::dataAttach);
+                System.out.println("Poszło");
+                setUpIntervalTask();
+            }
+        };
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

@@ -32,6 +32,7 @@ public class BasicWeatherInfo extends RefreshableFragment {
     public BasicWeatherInfo() {
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void dataAttach() {
         if(townName != null &&
@@ -45,16 +46,18 @@ public class BasicWeatherInfo extends RefreshableFragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void refreshData(){
-        String locationString = "Long: %f Lat: %f";
+        String locationString = "Long: %f\n Lat: %f";
         double lat = yahooResponse.getLocation().getLat();
         double log = yahooResponse.getLocation().getLog();
         townName.setText(yahooResponse.getLocation().getCity());
         location.setText(String.format(locationString, log, lat));
-        time.setText(yahooResponse.getCurrent_observation().getPubDate().toString());
-        temperature.setText(yahooResponse.getCurrent_observation().getCondition().getTemperature().toString());
-        presure.setText(yahooResponse.getCurrent_observation().getAtmosphere().getPressure().toString());
+        time.setText(yahooDataFormatter.formatTime(yahooResponse.getCurrent_observation().getPubDate()));
+        temperature.setText(yahooDataFormatter.formatTemperature(yahooResponse.getCurrent_observation().getCondition().getTemperature()));
+        presure.setText(yahooDataFormatter.formatPresure(yahooResponse.getCurrent_observation().getAtmosphere().getPressure()));
         discription.setText(yahooResponse.getCurrent_observation().getCondition().getText());
+        forecast_img.setImageResource(yahooDataFormatter.getApropiateImgForDesc(yahooResponse.getCurrent_observation().getCondition().getText()));
     }
 
 
@@ -73,6 +76,7 @@ public class BasicWeatherInfo extends RefreshableFragment {
         yahooResponse = yahooRepository.getYahooResponse();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

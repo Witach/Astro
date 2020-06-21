@@ -4,6 +4,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.myapplication.R;
 import com.example.myapplication.jsonparse.ForecastDay;
 
 import java.time.Instant;
@@ -30,17 +31,17 @@ public class YahooDataFormatter {
 
     public String formatTemperature(double temperature) {
         String unit = selectedUnitsType == Units.F ? "F" : "C";
-        return String.format("%f %s", temperature, unit);
+        return String.format("%.2f %s", temperature, unit);
     }
 
     public String formatPresure(double pressure) {
         String unit = selectedUnitsType == Units.F ? "inHg" : "hPa";
-        return String.format("%f %s", pressure, unit);
+        return String.format("%.2f %s", pressure, unit);
     }
 
     public String formatWindForce(double windForce) {
         String unit = selectedUnitsType == Units.F ? "m/h" : "km/h";
-        return String.format("%f %s", windForce, unit);
+        return String.format("%.2f %s", windForce, unit);
     }
 
     public String formatWindDirection(double direction) {
@@ -55,12 +56,12 @@ public class YahooDataFormatter {
     }
 
     public String formatHumidity(double humidity) {
-        return String.format("%f %", humidity);
+        return String.format("%.2f %", humidity);
     }
 
     public String formatVisibility(double visibility) {
         String unit = selectedUnitsType == Units.F ? "m" : "km";
-        return String.format("%f %s", visibility, unit);
+        return String.format("%.2f %s", visibility, unit);
     }
 
     ;
@@ -70,5 +71,18 @@ public class YahooDataFormatter {
         return String.format("Lowest: %s %s\n Highest: %s %s\n Desc: %s", forecastDay.getLow(), unit,
                 forecastDay.getHigh(), unit,
                 forecastDay.getText());
+    }
+
+    public int getApropiateImgForDesc(String description){
+        String lowerCaseDescription = description.toLowerCase();
+        if(lowerCaseDescription.contains("rain") || lowerCaseDescription.contains("showers"))
+            return R.drawable.rainy;
+        else if(lowerCaseDescription.contains("cloud"))
+            return R.drawable.cloudy;
+        else if(lowerCaseDescription.contains("storm"))
+            return R.drawable.stormy;
+        else
+            return R.drawable.sunny;
+
     }
 }

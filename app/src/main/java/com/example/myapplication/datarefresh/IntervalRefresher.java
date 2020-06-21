@@ -24,7 +24,6 @@ import okhttp3.Response;
 public class IntervalRefresher extends TimerTask {
     List<RefreshableFragment> refreshableFragmentList;
     AstroInfoActivity activity;
-    Gson gson;
     YahooClient yahooClient;
     YahooRepository yahooRepository;
     long refreshTime;
@@ -33,7 +32,6 @@ public class IntervalRefresher extends TimerTask {
     public IntervalRefresher(List<RefreshableFragment> refreshableFragmentList, AstroInfoActivity astroInfoActivity, long refreshTime) {
         this.refreshableFragmentList = refreshableFragmentList;
         this.activity = astroInfoActivity;
-        this.gson = new Gson();
         DIManager diManager = DIManager.getInstance();
         yahooClient = diManager.getYahooClient();
         yahooRepository = diManager.getYahooRepository();
@@ -58,11 +56,7 @@ public class IntervalRefresher extends TimerTask {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (ChronoUnit.MINUTES.between(yahooRepository.getLocalDateTime(), LocalDateTime.now()) > -1) {
-                    final String json = response.body().string();
-                    System.out.println(json);
-                    YahooResponse yahooResponse = gson.fromJson(json, YahooResponse.class);
-                    System.out.println(yahooResponse);
-                    yahooRepository.setYahooResponse(yahooResponse);
+                    yahooRepository.setYahooResponse(response.body().string());
                     activity.runOnUiThread(() -> {
                         refreshableFragmentList.forEach(DataAttach::dataAttach);
                     });
