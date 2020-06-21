@@ -40,11 +40,11 @@ public class YahooService {
     public Request getRequest(List<String> parameters, String url) {
         try {
             String parametersString = parameters.stream()
-                    .reduce("",(a,b) -> a + "&" + b);
+                    .reduce("",(a,b) -> a + b + "&");
             String signature = getSignature(parameters, baseUrl + url);
             String authorizationLine =  getAuthorizationLine(signature);
             return new Request.Builder()
-                    .url(baseUrl + url +"?" + parametersString + "&format=json")
+                    .url(baseUrl + url +"?" + parametersString + "format=json")
                     .header("Authorization", authorizationLine)
                     .header("X-Yahoo-App-Id", appId)
                     .header("Content-Type", "application/json")

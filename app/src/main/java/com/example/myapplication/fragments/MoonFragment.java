@@ -20,6 +20,7 @@ import com.astrocalculator.AstroCalculator;
 import com.example.myapplication.R;
 import com.example.myapplication.datarefresh.RefreshableFragment;
 import com.example.myapplication.jsonparse.YahooResponse;
+import com.example.myapplication.service.YahooDataFormatter;
 
 import static com.example.myapplication.activity.AstroFactory.astroCalculatorInstance;
 import static com.example.myapplication.activity.AstroFactory.cutUselessInfo;

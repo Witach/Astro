@@ -13,13 +13,22 @@ public class DIManager {
     OkHttpClient okHttpClient;
     YahooClient yahooClient;
     YahooRepository yahooRepository;
+    YahooDataFormatter yahooDataFormatter;
+
     private DIManager() {
         yahooService = new YahooService("dj0yJmk9QjduZk1TRVFMN250JmQ9WVdrOVJFNWlTazFFTkhFbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTdh",
                 "48746667d1352b63b406a30f16edead0c0d47097",
                 "DNbJMD4q");
         okHttpClient = new OkHttpClient();
-        yahooClient = new YahooClient(okHttpClient,yahooService);
         yahooRepository = new YahooRepository();
+        yahooDataFormatter = new YahooDataFormatter();
+        yahooClient = new YahooClient(okHttpClient,yahooService);
+
+
+    }
+
+    public YahooDataFormatter getYahooDataFormatter() {
+        return yahooDataFormatter;
     }
 
     public static DIManager getInstance(){

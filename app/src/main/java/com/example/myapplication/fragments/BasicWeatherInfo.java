@@ -15,6 +15,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.datarefresh.RefreshableFragment;
 import com.example.myapplication.jsonparse.YahooResponse;
 import com.example.myapplication.service.DIManager;
+import com.example.myapplication.service.YahooDataFormatter;
 import com.example.myapplication.service.YahooRepository;
 
 public class BasicWeatherInfo extends RefreshableFragment {
@@ -27,7 +28,7 @@ public class BasicWeatherInfo extends RefreshableFragment {
     ImageView forecast_img;
     YahooResponse yahooResponse;
     YahooRepository yahooRepository;
-
+    YahooDataFormatter yahooDataFormatter;
     public BasicWeatherInfo() {
     }
 
@@ -66,7 +67,9 @@ public class BasicWeatherInfo extends RefreshableFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        yahooRepository = DIManager.getInstance().getYahooRepository();
+        DIManager diManager = DIManager.getInstance();
+        yahooRepository = diManager.getYahooRepository();
+        yahooDataFormatter = diManager.getYahooDataFormatter();
         yahooResponse = yahooRepository.getYahooResponse();
     }
 
