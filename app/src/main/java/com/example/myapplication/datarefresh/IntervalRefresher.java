@@ -1,6 +1,9 @@
 package com.example.myapplication.datarefresh;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -27,6 +30,7 @@ public class IntervalRefresher extends TimerTask {
     YahooClient yahooClient;
     YahooRepository yahooRepository;
     long refreshTime;
+    ConnectivityManager connectivityManager;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public IntervalRefresher(List<RefreshableFragment> refreshableFragmentList, AstroInfoActivity astroInfoActivity, long refreshTime) {
@@ -36,12 +40,22 @@ public class IntervalRefresher extends TimerTask {
         yahooClient = diManager.getYahooClient();
         yahooRepository = diManager.getYahooRepository();
         this.refreshTime = refreshTime;
+        connectivityManager = activity.getConnectivityManager();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void run() {
-        yahooClient.sendForecastRequest("Sieradz", callback());
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        if (isConnected)
+            yahooClient.sendForecastRequest("Sieradz", callback());
+        else {
+            activity.runOnUiThread(() -> {
+                Toast.makeText(activity.getApplicationContext(), "Brak Połączenia", Toast.LENGTH_SHORT).show();
+            });
+
+        }
     }
 
     public Callback callback() {
@@ -55,11 +69,12 @@ public class IntervalRefresher extends TimerTask {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (ChronoUnit.MINUTES.between(yahooRepository.getLocalDateTime(), LocalDateTime.now()) > -1) {
+                if (yahooRepository.getYahooResponse() == null || ChronoUnit.MINUTES.between(yahooRepository.getLocalDateTime(), LocalDateTime.now()) > refreshTime) {
                     yahooRepository.setYahooResponse(response.body().string());
                     activity.runOnUiThread(() -> {
                         refreshableFragmentList.forEach(DataAttach::dataAttach);
                     });
+                    yahooRepository.persist();
                 }
             }
 

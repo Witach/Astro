@@ -22,7 +22,7 @@ public class DIManager {
         okHttpClient = new OkHttpClient();
         yahooRepository = new YahooRepository();
         yahooDataFormatter = new YahooDataFormatter();
-        yahooClient = new YahooClient(okHttpClient,yahooService);
+        yahooClient = new YahooClient(okHttpClient,yahooService, null);
 
 
     }

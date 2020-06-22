@@ -1,6 +1,9 @@
 package com.example.myapplication.jsonparse;
 
-public class Atmosphere {
+import java.io.Serializable;
+
+public class Atmosphere implements Serializable {
+    private static final long serialversionUID = 129348932546L;
 
     Integer humidity;
     Double visibility;

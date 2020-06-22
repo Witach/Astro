@@ -4,13 +4,17 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.activity.pager.MobilePagerAdapter;
 import com.example.myapplication.activity.pager.MyFragmentPagerAdapter;
@@ -52,6 +56,7 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
     private List<RefreshableFragment> fragments;
     private YahooRepository yahooRepository;
     private YahooClient yahooClient;
+    private ConnectivityManager connectivityManager;
 
     SharedPreferences sharedPreferences;
     volatile boolean stopThread = false;
@@ -74,13 +79,22 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
        DIManager diManager = DIManager.getInstance();
         yahooClient = diManager.getYahooClient();
         yahooRepository = diManager.getYahooRepository();
+        connectivityManager = (ConnectivityManager)getApplication().getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+//        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void onRefreshClick(View view){
-        timerTask.cancel();
-        timerProc.cancel();
-        yahooClient.sendForecastRequest("Sieradz", callback());
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        if(isConnected) {
+            timerTask.cancel();
+            timerProc.cancel();
+            yahooClient.sendForecastRequest("Sieradz", callback());
+        } else {
+            Toast.makeText(getApplicationContext(),"Brak połączenia",Toast.LENGTH_SHORT).show();
+        }
     }
 
     public Callback callback(){
@@ -94,8 +108,11 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 yahooRepository.setYahooResponse(response.body().string());
-                fragments.forEach(DataAttach::dataAttach);
+                runOnUiThread(()->{
+                    fragments.forEach(DataAttach::dataAttach);
+                });
                 System.out.println("Poszło");
+                yahooRepository.persist();
                 setUpIntervalTask();
             }
         };
@@ -240,4 +257,7 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
 
     }
 
+    public ConnectivityManager getConnectivityManager() {
+        return connectivityManager;
+    }
 }

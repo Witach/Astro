@@ -1,6 +1,9 @@
 package com.example.myapplication.jsonparse;
 
-public class ForecastDay {
+import java.io.Serializable;
+
+public class ForecastDay implements Serializable {
+    private static final long serialversionUID = 12934893544L;
     String day;
     Long date;
     Double low;

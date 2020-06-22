@@ -1,7 +1,9 @@
 package com.example.myapplication.jsonparse;
 
-public class Condition {
+import java.io.Serializable;
 
+public class Condition implements Serializable {
+    private static final long serialversionUID = 12934559324L;
     String text;
     Double temperature;
     Double code;

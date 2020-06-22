@@ -1,6 +1,10 @@
 package com.example.myapplication.service;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -18,10 +22,13 @@ public class YahooClient {
     OkHttpClient client;
     YahooService yahooService;
     Units units;
+    Context context;
+    ConnectivityManager cm;
 
-    public YahooClient(OkHttpClient client, YahooService yahooService) {
+    public YahooClient(OkHttpClient client, YahooService yahooService, Context context) {
         this.client = client;
         this.yahooService = yahooService;
+        this.context = context;
     }
 
     public Units getUnits() {
@@ -49,7 +56,18 @@ public class YahooClient {
     }
 
      synchronized private void sendRequest(Request request, Callback callback){
-        Call call = client.newCall(request);
-        call.enqueue(callback);
+         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        if(isConnected) {
+            Call call = client.newCall(request);
+            call.enqueue(callback);
+        } else {
+            Toast.makeText(context, "Brak Połączenia", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+        cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 }

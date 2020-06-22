@@ -2,7 +2,10 @@ package com.example.myapplication.jsonparse;
 
 import android.content.res.Configuration;
 
-public class CurrentObservation {
+import java.io.Serializable;
+
+public class CurrentObservation implements Serializable {
+    private static final long serialversionUID = 1573489324L;
     Wind wind;
     Atmosphere atmosphere;
     Astronomy astronomy;

@@ -3,11 +3,15 @@ package com.example.myapplication.activity;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.jsonparse.YahooResponse;
@@ -21,6 +25,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -31,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     YahooClient yahooClient;
     YahooRepository yahooRepository;
     YahooDataFormatter yahooDataFormatter;
+    ConnectivityManager connectivityManager;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +44,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         DIManager diManager = DIManager.getInstance();
         yahooClient = diManager.getYahooClient();
+        yahooClient.setContext(getApplicationContext());
         yahooRepository = diManager.getYahooRepository();
+        yahooRepository.setContext(getApplicationContext());
+        connectivityManager = (ConnectivityManager)getApplication().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        Optional<YahooRepository> yahooRepositoryOptional = yahooRepository.load();
+        if(yahooRepositoryOptional.isPresent()){
+            YahooRepository loadedYahooRepository = yahooRepositoryOptional.get();
+            yahooRepository.setYahooResponse(loadedYahooRepository.getYahooResponse());
+            yahooRepository.setLocalDateTime(loadedYahooRepository.getLocalDateTime());
+        }
         String unitType = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("unit_type", Units.F.name());
         Units unit = Units.valueOf(unitType);
         yahooClient.setUnits(unit);
@@ -46,10 +63,11 @@ public class MainActivity extends AppCompatActivity {
         yahooDataFormatter.setSelectedUnitsType(unit);
         String interval = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("interval_time", "15");
         Integer intervalVal = Integer.parseInt(interval);
-        if(ChronoUnit.MINUTES.between(yahooRepository.getLocalDateTime(), LocalDateTime.now()) > -1){
+        if((yahooRepository.getYahooResponse() == null || ChronoUnit.MINUTES.between(yahooRepository.getLocalDateTime(), LocalDateTime.now()) > intervalVal) && isConnected){
             yahooClient.sendForecastRequest("Sieradz",callback());
+        } else if(!isConnected){
+            Toast.makeText(getApplicationContext(),"Brak połączenia",Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
@@ -83,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 yahooRepository.setYahooResponse(response.body().string());
+                yahooRepository.persist();
             }
         };
     }

@@ -1,6 +1,9 @@
 package com.example.myapplication.jsonparse;
 
-public class Wind {
+import java.io.Serializable;
+
+public class Wind implements Serializable {
+    private static final long serialversionUID = 1293546624L;
     Integer chill;
     Integer direction;
     Double speed;

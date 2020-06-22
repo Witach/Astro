@@ -1,6 +1,9 @@
 package com.example.myapplication.jsonparse;
 
-public class Astronomy {
+import java.io.Serializable;
+
+public class Astronomy implements Serializable {
+    private static final long serialversionUID = 129348933456L;
     String sunrise;
     String sunset;
 

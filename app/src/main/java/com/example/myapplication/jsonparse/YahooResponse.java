@@ -1,8 +1,10 @@
 package com.example.myapplication.jsonparse;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class YahooResponse {
+public class YahooResponse  implements Serializable {
+    private static final long serialversionUID = 12934893324L;
     Location location;
     CurrentObservation current_observation;
     List<ForecastDay> forecasts;
