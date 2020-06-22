@@ -8,8 +8,8 @@
     tools:context=".activity.MainActivity">
 
     <LinearLayout
-        android:layout_width="207dp"
-        android:layout_height="208dp"
+        android:layout_width="232dp"
+        android:layout_height="278dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,5 +47,14 @@
             android:background="#ffffff"
             android:onClick="goToSettingsActivity"
             android:text="Settings" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="#ffffff"
+            android:onClick="goToLocationsActivity"
+            android:text="Locations" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

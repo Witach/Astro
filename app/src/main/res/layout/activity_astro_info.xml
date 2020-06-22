@@ -23,7 +23,7 @@
             android:background="@android:color/black"
             android:gravity="center"
             android:text="15"
-            android:textColor="@android:color/background_light"
+            android:textColor="@android:color/background_dark"
             android:textSize="18sp" />
 
         <TextView
@@ -34,7 +34,7 @@
             android:background="@android:color/black"
             android:gravity="center"
             android:text="22"
-            android:textColor="@android:color/background_light"
+            android:textColor="@android:color/background_dark"
             android:textSize="18sp" />
 
         <TextView

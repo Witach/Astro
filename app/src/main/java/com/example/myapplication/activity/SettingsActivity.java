@@ -15,7 +15,6 @@ import com.example.myapplication.R;
 
 public class SettingsActivity extends PreferenceActivity {
 
-    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

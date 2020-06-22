@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
+import com.example.myapplication.contract.LocationDBHelper;
 import com.example.myapplication.jsonparse.YahooResponse;
 import com.example.myapplication.service.DIManager;
 import com.example.myapplication.service.Units;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     YahooRepository yahooRepository;
     YahooDataFormatter yahooDataFormatter;
     ConnectivityManager connectivityManager;
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,26 +60,58 @@ public class MainActivity extends AppCompatActivity {
             yahooRepository.setLocalDateTime(loadedYahooRepository.getLocalDateTime());
         }
         String unitType = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("unit_type", Units.F.name());
+        String woeidString = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("woeid", "485483");
+        long woeid = Long.parseLong(woeidString);
+        yahooClient.setWoeid(woeid);
+        boolean isConfigChanged = false;
+        if (yahooRepository.getYahooResponse() !=null && yahooRepository.getYahooResponse().getLocation().getWoeid() != woeid){
+            isConfigChanged = true;
+        }
+
         Units unit = Units.valueOf(unitType);
+        if(unit != yahooClient.getUnits()){
+            isConfigChanged = true;
+        }
         yahooClient.setUnits(unit);
         yahooDataFormatter = diManager.getYahooDataFormatter();
         yahooDataFormatter.setSelectedUnitsType(unit);
         String interval = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("interval_time", "15");
         Integer intervalVal = Integer.parseInt(interval);
-        if((yahooRepository.getYahooResponse() == null || ChronoUnit.MINUTES.between(yahooRepository.getLocalDateTime(), LocalDateTime.now()) > intervalVal) && isConnected){
-            yahooClient.sendForecastRequest("Sieradz",callback());
+
+        if((yahooRepository.getYahooResponse() == null || ChronoUnit.MINUTES.between(yahooRepository.getLocalDateTime(), LocalDateTime.now()) > intervalVal || isConfigChanged) && isConnected){
+            yahooClient.sendForecastRequestWithWoeid(callback());
         } else if(!isConnected){
             Toast.makeText(getApplicationContext(),"Brak połączenia",Toast.LENGTH_SHORT).show();
         }
+
+
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onPostResume() {
         super.onPostResume();
         String unitType = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("unit_type", Units.F.name());
         Units unit = Units.valueOf(unitType);
-        yahooClient.setUnits(unit);
         yahooDataFormatter.setSelectedUnitsType(unit);
+        String woeidString = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("woeid", "485483");
+        long woeid = Long.parseLong(woeidString);
+        boolean isConfigChanged = false;
+        if (yahooRepository.getYahooResponse() !=null && yahooRepository.getYahooResponse().getLocation().getWoeid() != woeid){
+            isConfigChanged = true;
+        }
+        if(unit != yahooClient.getUnits()){
+            isConfigChanged = true;
+        }
+        yahooClient.setUnits(unit);
+        yahooClient.setWoeid(woeid);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        if((yahooRepository.getYahooResponse() == null ||  isConfigChanged) && isConnected){
+            yahooClient.sendForecastRequestWithWoeid(callback());
+        } else if(!isConnected){
+            Toast.makeText(getApplicationContext(),"Brak połączenia",Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void goToAstroInfoActivity(View view){
@@ -86,6 +121,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToSettingsActivity(View view){
         Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToLocationsActivity(View view){
+        Intent intent = new Intent(this, LocationActivity.class);
         startActivity(intent);
     }
 
@@ -102,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 yahooRepository.setYahooResponse(response.body().string());
                 yahooRepository.persist();
+//                System.out.println(response.body().string());
             }
         };
     }

@@ -13,16 +13,4 @@
         android:title="Unit Type"
         android:entries="@array/UnitsData"
         android:entryValues="@array/UnitDataValues"/>
-    <EditTextPreference
-        android:defaultValue="15"
-        android:key="long"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="Long" />
-    <EditTextPreference
-        android:defaultValue="20"
-        android:key="lat"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="Latitiude" />
 </PreferenceScreen>

@@ -53,6 +53,7 @@ public class YahooRepository implements Serializable {
     public synchronized void setYahooResponse(String json) {
         yahooResponse = gson.fromJson(json, YahooResponse.class);
         localDateTime = LocalDateTime.now();
+        System.out.println(yahooResponse);
     }
 
     public synchronized void persist() {

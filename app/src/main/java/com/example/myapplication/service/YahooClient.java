@@ -24,6 +24,7 @@ public class YahooClient {
     Units units;
     Context context;
     ConnectivityManager cm;
+    long woeid;
 
     public YahooClient(OkHttpClient client, YahooService yahooService, Context context) {
         this.client = client;
@@ -55,6 +56,39 @@ public class YahooClient {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void sendForecastRequest(double lat, double log, Callback callback){
+        try {
+            List<String> paraneters = new LinkedList<>();
+            paraneters.add("lat=" + URLEncoder.encode(Double.toString(lat), "UTF-8"));
+            paraneters.add("lon=" + URLEncoder.encode(Double.toString(log), "UTF-8"));
+            paraneters.add("u=" + URLEncoder.encode(units.name().toLowerCase(), "UTF-8"));
+            Request request = yahooService.getRequest(paraneters, "/forecastrss");
+            System.out.println(request.url().toString());
+            sendRequest(request,callback);
+
+        } catch (UnsupportedEncodingException e){
+            e.printStackTrace();
+            System.exit(0);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void sendForecastRequestWithWoeid(Callback callback){
+        try {
+            List<String> paraneters = new LinkedList<>();
+            paraneters.add("woeid=" + URLEncoder.encode(Long.toString(woeid), "UTF-8"));
+            paraneters.add("u=" + URLEncoder.encode(units.name().toLowerCase(), "UTF-8"));
+            Request request = yahooService.getRequest(paraneters, "/forecastrss");
+            System.out.println(request.url().toString());
+            sendRequest(request,callback);
+
+        } catch (UnsupportedEncodingException e){
+            e.printStackTrace();
+            System.exit(0);
+        }
+    }
+
      synchronized private void sendRequest(Request request, Callback callback){
          NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
          boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
@@ -66,8 +100,17 @@ public class YahooClient {
         }
     }
 
+
     public void setContext(Context context) {
         this.context = context;
         cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    }
+
+    public long getWoeid() {
+        return woeid;
+    }
+
+    public synchronized void setWoeid(long woeid) {
+        this.woeid = woeid;
     }
 }

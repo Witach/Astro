@@ -91,7 +91,7 @@ public class AstroInfoActivity extends AppCompatActivity implements SunFragment.
         if(isConnected) {
             timerTask.cancel();
             timerProc.cancel();
-            yahooClient.sendForecastRequest("Sieradz", callback());
+            yahooClient.sendForecastRequestWithWoeid( callback());
         } else {
             Toast.makeText(getApplicationContext(),"Brak połączenia",Toast.LENGTH_SHORT).show();
         }

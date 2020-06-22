@@ -49,7 +49,7 @@ public class IntervalRefresher extends TimerTask {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         if (isConnected)
-            yahooClient.sendForecastRequest("Sieradz", callback());
+            yahooClient.sendForecastRequestWithWoeid( callback());
         else {
             activity.runOnUiThread(() -> {
                 Toast.makeText(activity.getApplicationContext(), "Brak Połączenia", Toast.LENGTH_SHORT).show();
